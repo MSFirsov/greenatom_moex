@@ -8,6 +8,9 @@ import openpyxl
 from openpyxl.styles import Alignment
 
 
+from send_mail import send_mail
+
+
 current_month = int(datetime.date.today().strftime('%m'))
 months = {
     1: '01 - Январь',
@@ -26,7 +29,7 @@ months = {
 
 
 options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # работа драйвера в фоновом режиме
+# options.add_argument('--headless')  # работа драйвера в фоновом режиме
 driver = webdriver.Chrome(options=options)
 url_usd = 'https://www.moex.com/ru/derivatives/currency-rate.aspx?currency=USD_RUB'
 url_jpu = 'https://www.moex.com/ru/derivatives/currency-rate.aspx?currency=JPY_RUB'
@@ -71,6 +74,17 @@ def get_choice_month():
     time.sleep(1)
 
 
+def make_text_mail(num):
+    if num % 100 in [11, 12, 13, 14]:
+        return f'В таблице {num} строк'
+    elif num % 10 == 1:
+        return f'В таблице {num} строка'
+    elif num % 10 in [2, 3, 4]:
+        return f'В таблице {num} строки'
+    else:
+        return f'В таблице {num} строк'
+
+
 driver.get(url_usd)
 wait = WebDriverWait(driver, 20)
 
@@ -112,14 +126,11 @@ for row in range(7, len(table_rows)):
     worksheet.cell(row=row, column=2, value=value_num)
     worksheet.cell(row=row, column=3, value=time_str)
 
-
 workbook.save(excel_file)
-
 
 # JPY_RUB
 
 driver.get(url_jpu)
-print('начало формирования jpu')
 time.sleep(5)
 get_choice_month()
 
@@ -145,7 +156,6 @@ for row in range(7, len(table_rows)):
     worksheet.cell(row=row, column=4, value=date)
     worksheet.cell(row=row, column=5, value=value_num)
     worksheet.cell(row=row, column=6, value=time_str)
-
 
 for row in worksheet.iter_rows():
     for cell in row:
@@ -174,8 +184,6 @@ for row in range(max_row, 1, -1):
 num_rows = worksheet.max_row
 for row in range(2, num_rows + 1):
     worksheet.cell(row=row, column=7).value = f"=B{row}/E{row}"
-
 workbook.save(excel_file)
 
-
-
+send_mail(make_text_mail(num_rows), excel_file)
