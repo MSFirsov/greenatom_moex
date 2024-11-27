@@ -12,6 +12,8 @@ from send_mail import send_mail
 
 
 current_month = int(datetime.date.today().strftime('%m'))
+current_year = int(datetime.date.today().strftime('%Y'))
+
 months = {
     1: '01 - Январь',
     2: '02 - Февраль',
@@ -45,9 +47,17 @@ def get_choice_month():
     driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[4]/div[1]/div[1]/div[1]').click()
     time.sleep(1)
 
-    # Выбираем месяц
-    driver.find_element(By.XPATH, f'//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[2]/div[{current_month-1}]').click()
-    time.sleep(1)
+    # Выбираем месяц и год
+    if current_month == 1:
+        driver.find_element(By.XPATH, f'//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[2]/div[12]').click()
+        time.sleep(1)
+        # селектор года
+        driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[4]/div[1]/div[2]').click()
+        # выбор года
+        driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[3]/div[2]').click()
+    else:
+        driver.find_element(By.XPATH, f'//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[2]/div[{current_month - 1}]').click()
+        time.sleep(1)
 
     # Выбираем перое число
     driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[4]/div[3]/div[1]/div[contains(text(), "1")]').click()
@@ -61,9 +71,17 @@ def get_choice_month():
     driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[7]/div[1]/div[1]/div[1]').click()
     time.sleep(1)
 
-    # Выбираем месяц
-    driver.find_element(By.XPATH, f'//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[5]/div[{current_month-1}]').click()
-    time.sleep(1)
+    # Выбираем месяц и год
+    if current_month == 1:
+        driver.find_element(By.XPATH, f'//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[5]/div[12]').click()
+        time.sleep(1)
+        # селектор года
+        driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[7]/div[1]/div[2]').click()
+        # выбор года
+        driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[6]/div[2]').click()
+    else:
+        driver.find_element(By.XPATH, f'//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[5]/div[{current_month - 1}]').click()
+        time.sleep(1)
 
     # Выбираем последнее число
     driver.find_element(By.XPATH, '//*[@id="x6yzHnS3PmDg26JWSJJHQUtgRdYhwntYBHnpGe6f7KXJI0S58gvlQbsdGrE0XLam"]/div[7]/div[3]/div[5]/div[last()]').click()
@@ -131,7 +149,7 @@ workbook.save(excel_file)
 # JPY_RUB
 
 driver.get(url_jpu)
-time.sleep(5)
+time.sleep(3)
 get_choice_month()
 
 table_2 = wait.until(EC.visibility_of_element_located((By.XPATH, table)))
